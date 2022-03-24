@@ -11,54 +11,68 @@ exchange::exchange(char *filePath) {
     char Lpath[] = "/mnt/c/Users/dingkris/Desktop/WSLshare";
     char Wpath[] = "C:\\Users\\dingkris\\Desktop\\WSLshare";
     TargetDirPath = Wpath;
+    DestFilePath = filePath;
     TargetFilePath = TargetDirPath + '\\' + filePath;
 }
 
-void exchange::copytosingleFile(char *filePath) {
-    char byte[1024]; 
+bool exchange::copytosingleFile() {
+    char byte[1024*1024]; 
+    size_t readcount = -1;
+    FILE *fdr = fopen(DestFilePath.data(), "rb");
+    FILE *fdw = fopen(TargetFilePath.data(),"wb+");
 
-    open(filePath, );
-    if(!fin.is_open()) {
-        cout << "fout fin failed to open file" << endl;
-        return;
-    }
-
-    fout.open(TargetFilePath, ios_base::out | ios_base::trunc | ios_base::binary);
+    //debug
+    cout << DestFilePath << endl;
     cout << TargetFilePath << endl;
-    if(!fout.is_open()) {
-        cout << "fout failed to open file" << endl;
-        return;
+
+    if(NULL == fdr) {
+        cout << "Failed to open filePath: " << DestFilePath << endl;
+        return false;
+    }else if(NULL == fdw) {
+        cout << "Failed to open Target file Path: " << TargetFilePath << endl;
+        return false;
     }
 
-    while(!fin.eof()) {
-        fin.read(byte, 1024);
-        if(!fin.eof())
-            fout.write(byte, 1024);
-        cout << "translating..." << endl;
+    while(readcount) {
+        readcount = fread(byte, 1, 1024*1024, fdr);
+        fwrite(byte, 1, readcount, fdw);   
     }
+    
+    if(readcount == -1)
+        return false;
+    fclose(fdr);
+    fclose(fdw);
 
-    fin.close();
-    fout.close();
+    return true;
 }
 
-void exchange::copyfromsingleFile(char *filePath) {
-    ifstream fin;
-    ofstream fout;
-    char byte[1024]; 
+bool exchange::copyfromsingleFile() {
+//    cout << "starting translate" << endl;
+    char byte[1024*1024]; 
+    size_t readcount = -1;
+    FILE *fdr = fopen(TargetFilePath.data(), "rb");
+    FILE *fdw = fopen(DestFilePath.data(),"wb+");
+    //debug
+    cout << DestFilePath << endl;
+    cout << TargetFilePath << endl;
 
-    fin.open(TargetFilePath, ios_base::in | ios_base::binary);
-    if(!fin.is_open()) {
-        cerr << "failedto open file" << endl;
-        return;
+    if(NULL == fdr) {
+        cout << "Failed to open filePath: " << DestFilePath << endl;
+        return false;
+    }else if(NULL == fdw) {
+        cout << "Failed to open Target file Path: " << TargetFilePath << endl;
+        return false;
     }
 
-    fout.open(filePath, ios_base::out | ios_base::trunc | ios_base::binary);
-
-    while(!fin.eof()) {
-        fin.read(byte, 1024);
-        fout.write(byte, 1024);
+    while(readcount) {
+        readcount = fread(byte, 1, 1024*1024, fdr);
+        cout << 
+        fwrite(byte, 1, readcount, fdw);   
     }
+    if(readcount == -1)
+        return false;
+    fclose(fdr);
+    fclose(fdw);
 
-    fin.close();
-    fout.close();
+    return true;
 }

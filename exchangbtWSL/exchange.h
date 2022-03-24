@@ -8,11 +8,12 @@ class exchange {
     public:
         exchange(char *filePath);
         ~exchange() {};
-        void copytosingleFile(char *filePath);
-        void copyfromsingleFile(char *filePath);
+        bool copytosingleFile();
+        bool copyfromsingleFile();
 
     private:
         string TargetDirPath;
+        string DestFilePath;
         string TargetFilePath;
 };
 
