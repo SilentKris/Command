@@ -24,4 +24,4 @@ $(TARGET):$(OBJS)
 
 #make clean 删除所有的.o和目标文件
 clean:
-	del  $(OBJS) $(TARGET).exe
+	rm  $(OBJS) $(TARGET).exe
