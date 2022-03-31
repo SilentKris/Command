@@ -8,7 +8,7 @@ SRCS = $(wildcard *cpp)
 OBJS = $(patsubst %cpp, %o, $(SRCS))
 
 #可执行文件的名字
-TARGET = cpuinfo
+TARGET = dir
 
 #.PHONE伪目标
 .PHONE:all clean
@@ -20,7 +20,7 @@ $(TARGET):$(OBJS)
 
 #上一句目标文件依赖一堆.o文件，这句表示所有的.o都由相应的.cpp文件自动生成
 %.o:%.c
-	$(CC) -c $^
+	$(CC) -g -c $^
 
 #make clean 删除所有的.o和目标文件
 clean:
