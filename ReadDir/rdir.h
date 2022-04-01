@@ -6,8 +6,8 @@ using namespace std;
 
 typedef struct filelist {
     dirent dent;
-
     struct filelist *next;
+    struct filelist *tail;
 } fileList;
 
 class RDIR

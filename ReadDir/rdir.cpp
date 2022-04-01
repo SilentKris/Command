@@ -7,6 +7,7 @@
 
 RDIR::RDIR(const char *dirPath):fileCount(0)
 {
+    filelist.tail = &filelist;
     DIR *dp = opendir(dirPath);
     while(true) { 
         dirent *dent = readdir(dp);
@@ -18,19 +19,15 @@ RDIR::RDIR(const char *dirPath):fileCount(0)
 }
 
 void RDIR::addfile(dirent * dent) {
-        fileList *p_cur = &filelist;
-        fileList *p_next = nullptr;
 
-        while(p_cur->next)
-            p_cur = p_cur->next;
+        fileList *p_cur = filelist.tail;
+        fileList *p_next = new fileList;
 
-        p_next = new fileList;
-        p_next->next = nullptr;
-        
         memcpy(&p_next->dent, dent, sizeof(dirent));
+        p_next->next = nullptr;
+
         p_cur->next = p_next;
-        p_cur = p_next;
-        p_next = p_next->next;
+        filelist.tail = p_next;
 }
 
 void RDIR::getFileList() {
@@ -45,5 +42,18 @@ void RDIR::getFileList() {
 
 RDIR::~RDIR()
 {
-    cout << "destruct this structure" << endl;
+    if(nullptr != filelist.next) {
+        fileList *p_cur = filelist.next;
+        fileList *p_next = p_cur->next;
+        while(true) {
+            if(p_next){
+                delete p_cur;
+                p_next = p_next->next;
+            }else {
+                delete p_cur;
+                break;
+            }
+        }
+    }
+    cout << "deconstructe" << endl;
 }
